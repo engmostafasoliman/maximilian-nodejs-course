@@ -3,17 +3,20 @@ const bodyParser = require("body-parser");
 const app = express();
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const authRoutes = require("./routes/auth");
 const path = require("path");
 const errorController = require("./controllers/errors");
 const mongoose = require("mongoose");
 // const Product = require("./models/products");
 const User = require("./models/user");
+
 // const Cart = require("./models/cart");
 // const CartItem = require("./models/cat-item");
 // const Order = require("./models/order");
 // const OrderItem = require("./models/order-item");
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname,"public")));
+app.use(authRoutes);
 
 app.set("view engine","ejs");
 app.set("views","views");
