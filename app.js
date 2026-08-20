@@ -28,10 +28,7 @@ app.use((req,res,next)=>{
         console.log(err);
     });
 });
-app.use((req,res,next)=>{
-    res.locals.isAuthenticated = req.session ? !!req.session.isLoggedIn : false;
-    next();
-});
+
 app.use(authRoutes);
 app.use("/admin",adminRoutes);
 app.use(shopRoutes);
