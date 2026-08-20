@@ -9,12 +9,20 @@
                     class="<%= path === '/cart' ? 'active' : '' %>">Cart</a></li>
             <li class="main-header__item"><a href="/orders"
                     class="<%= path === '/orders' ? 'active' : '' %>">Orders</a></li>
+                    
+            <% if(isAuthenticated) { %>
             <li class="main-header__item"><a href="/admin/products"
                     class="<%= path === '/admin/products' ? 'active' : '' %>">Admin Products</a></li>
             <li class="main-header__item"><a href="/admin/add-product?edit=false"
                     class="<%= path === '/admin/add-product' ? 'active' : '' %>">Add Product</a></li>
+            <% } %>
+            <% if(!isAuthenticated) { %>
             <li class="main-header__item"><a href="/login"
                     class="<%= path === '/login' ? 'active' : '' %>">Login</a></li>
+            <% } else { %>
+            <li class="main-header__item"><a href="/logout"
+                    class="<%= path === '/logout' ? 'active' : '' %>">Logout</a></li>
+            <% } %>
         </ul>
     </nav>
 </header>

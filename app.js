@@ -16,7 +16,6 @@ const User = require("./models/user");
 // const OrderItem = require("./models/order-item");
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname,"public")));
-app.use(authRoutes);
 
 app.set("view engine","ejs");
 app.set("views","views");
@@ -29,6 +28,11 @@ app.use((req,res,next)=>{
         console.log(err);
     });
 });
+app.use((req,res,next)=>{
+    res.locals.isAuthenticated = req.session ? !!req.session.isLoggedIn : false;
+    next();
+});
+app.use(authRoutes);
 app.use("/admin",adminRoutes);
 app.use(shopRoutes);
 app.use(errorController.get404);
