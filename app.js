@@ -7,8 +7,12 @@ const authRoutes = require("./routes/auth");
 const path = require("path");
 const errorController = require("./controllers/errors");
 const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 // const Product = require("./models/products");
 const User = require("./models/user");
+const MONGODB_URI = 'mongodb+srv://devmostafasoliman_db_user:TvL2qEKQsoLuTR1a@cluster0.hqnkpd7.mongodb.net/shop?appName=Cluster0';
+const store = new MongoDBStore({uri:MONGODB_URI,collection:"sessions"});
 
 // const Cart = require("./models/cart");
 // const CartItem = require("./models/cat-item");
@@ -16,6 +20,7 @@ const User = require("./models/user");
 // const OrderItem = require("./models/order-item");
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname,"public")));
+app.use(session({secret:"mysecretkey",resave:false,saveUninitialized:false, }));
 
 app.set("view engine","ejs");
 app.set("views","views");
