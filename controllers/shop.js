@@ -8,7 +8,7 @@ const { ObjectId } = require("mongodb");
 exports.getProducts = (req, res, next) => {
 
     Product.find().then((products) => {
-             res.render("shop/products-list", { prods: products, pageTitle: "Shop", path: "/",isAuthenticated:req.isLoggedIn });
+             res.render("shop/products-list", { prods: products, pageTitle: "Shop", path: "/",isAuthenticated:req.session.isLoggedIn });
 
     }).catch((err) => {
         console.log(err);
@@ -19,7 +19,7 @@ exports.getProduct = (req, res, next) => {
     const prodId = req.params.productId;
     Product.findById(prodId).then((product) => {
         console.log(" product ",product);
-          res.render("shop/product-details", { product: product, pageTitle: product.title, path: "/products",isAuthenticated:req.isLoggedIn });
+          res.render("shop/product-details", { product: product, pageTitle: product.title, path: "/products",isAuthenticated:req.session.isLoggedIn });
     }).catch((err) => {
         console.log(err);
     });
@@ -27,7 +27,7 @@ exports.getProduct = (req, res, next) => {
 //get index 
 exports.getIndex = (req, res, next) => {
     Product.find().then((products) => {
-      res.render("shop/index", { prods: products, pageTitle: "Shop", path: "/",isAuthenticated:req.isLoggedIn });
+      res.render("shop/index", { prods: products, pageTitle: "Shop", path: "/",isAuthenticated:req.session.isLoggedIn });
     }).catch((err) => {
         console.log(err);
     });
@@ -37,7 +37,7 @@ exports.getIndex = (req, res, next) => {
 exports.getCart = (req, res, next) => {
     req.user.getCart().then((products)=>{
         console.log(products);
-        res.render("shop/cart", { pageTitle: "Cart", path: "/cart", products:products,isAuthenticated:req.isLoggedIn});
+        res.render("shop/cart", { pageTitle: "Cart", path: "/cart", products:products,isAuthenticated:req.session.isLoggedIn});
     }).catch((err)=>{
         console.log(err);
     });
@@ -45,7 +45,7 @@ exports.getCart = (req, res, next) => {
 }
 //get checkout
 exports.getCheckout = (req, res, next) => {
-    res.render("shop/checkout", { pageTitle: "Checkout", path: "/checkout",isAuthenticated:req.isLoggedIn });
+    res.render("shop/checkout", { pageTitle: "Checkout", path: "/checkout",isAuthenticated:req.session.isLoggedIn });
 }
 
 exports.postCart = (req, res, next) => {
@@ -55,7 +55,7 @@ exports.postCart = (req, res, next) => {
     Product.findById(prodId).then((product)=>{
         return req.user.addToCart(product);
     }).then((result)=>{
-        res.redirect("/cart",{isAuthenticated:req.isLoggedIn});   
+        res.redirect("/cart");
     }).catch((err)=>{
         console.log(err);
     });
@@ -63,7 +63,7 @@ exports.postCart = (req, res, next) => {
 exports.postCartDeleteItem = (req, res, next) => {
     const prodId = req.body.productId;
     req.user.deleteCartItem(prodId).then((result)=>{
-        res.redirect("/cart",{isAuthenticated:req.isLoggedIn});   
+        res.redirect("/cart");
     }).catch((err)=>{
         console.log(err);
     });
@@ -71,7 +71,7 @@ exports.postCartDeleteItem = (req, res, next) => {
 }
 exports.postOrder = (req,res,next)=>{
     req.user.addOrder().then((result)=>{
-        res.redirect("/orders",{isAuthenticated:req.isLoggedIn});
+        res.redirect("/orders");
     }).catch((err)=>{
         console.log(err);
     });
@@ -85,7 +85,7 @@ exports.getOrders = (req, res, next) => {
             pageTitle: "Your Orders",
             path: "/orders",
             orders: orders,
-            isAuthenticated:req.isLoggedIn
+            isAuthenticated:req.session.isLoggedIn
         });
     }).catch((err)=>{
         console.log(err);

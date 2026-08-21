@@ -10,10 +10,10 @@ exports.postAddProduct = (req, res, next) => {
     const imageUrl = req.body.imageurl;
     const price = req.body.price;
     const description = req.body.description;
-    const product = new Product({title :title ,imageUrl:imageUrl,price:price,description:description,userId:req.user});
+    const product = new Product({title :title ,imageUrl:imageUrl,price:price,description:description,userId:req.session.user});
     product.save().then((result) => {
         console.log("created");
-        res.redirect("/admin/products",{isAuthenticated:req.isLoggedIn}); 
+        res.redirect("/admin/products",{isAuthenticated:req.session.isLoggedIn}); 
     }).catch((err) => {
         console.log(err);
     });

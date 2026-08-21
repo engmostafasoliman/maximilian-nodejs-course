@@ -20,13 +20,16 @@ const store = new MongoDBStore({uri:MONGODB_URI,collection:"sessions"});
 // const OrderItem = require("./models/order-item");
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname,"public")));
-app.use(session({secret:"mysecretkey",resave:false,saveUninitialized:false, }));
+app.use(session({secret:"mysecretkey",resave:false,saveUninitialized:false,store:store}));
 
 app.set("view engine","ejs");
 app.set("views","views");
 
 app.use((req,res,next)=>{
-    User.findById("6a82b5d4bf2753f132ec2d40").then((user)=>{
+    if(!req.session.user){
+        return next();
+    }
+    User.findById(req.session.user._id).then((user)=>{
         req.user = user;
         next();
     }).catch((err)=>{
@@ -34,11 +37,16 @@ app.use((req,res,next)=>{
     });
 });
 
+app.use((req,res,next)=>{
+    res.locals.isAuthenticated = req.session.isLoggedIn;
+    next();
+});
+
 app.use(authRoutes);
 app.use("/admin",adminRoutes);
 app.use(shopRoutes);
 app.use(errorController.get404);
-mongoose.connect("mongodb+srv://devmostafasoliman_db_user:TvL2qEKQsoLuTR1a@cluster0.hqnkpd7.mongodb.net/shop?appName=Cluster0").then((result)=>{    
+mongoose.connect(MONGODB_URI).then((result)=>{    
    User.findOne().then((user)=>{
     if(!user){
         const user = new User({name:"mostafa",email:"Devmostafasoliman@gmail.com",cart:{items:[]}}).save(); 
