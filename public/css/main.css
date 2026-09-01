@@ -46,6 +46,26 @@ body {
     color: #000;
 }
 
+.main-header__item form {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+.main-header__item button {
+    font: inherit;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #e2dfdf;
+}
+
+.main-header__item button:hover,
+.main-header__item button:active {
+    color: #000;
+}
+
 main {
     padding: 1rem;
 }
