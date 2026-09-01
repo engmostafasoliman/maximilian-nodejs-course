@@ -40,4 +40,6 @@
                         <h1>No Products Found</h1>
                     </main>
                     <% } %>
+                    <% if(isAuthenticated) { %>
                         <%- include('../includes/end.ejs') %>
+                        <% } %>
