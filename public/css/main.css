@@ -32,7 +32,7 @@ body {
     gap: 1rem;
 }
 
-.main-header__item:last-child {
+.main-header__item--right {
     margin-left: auto;
 }
 

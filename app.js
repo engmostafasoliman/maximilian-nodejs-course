@@ -49,7 +49,7 @@ app.use(errorController.get404);
 mongoose.connect(MONGODB_URI).then((result)=>{    
    User.findOne().then((user)=>{
     if(!user){
-        const user = new User({name:"mostafa",email:"Devmostafasoliman@gmail.com",cart:{items:[]}}).save(); 
+        const user = new User({name:"mostafa",email:"Devmostafasoliman@gmail.com",cart:{items:[]}}).save();
     }
    })
     app.listen(3001); 
