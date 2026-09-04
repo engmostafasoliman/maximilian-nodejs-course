@@ -24,19 +24,23 @@ exports.getSignup = (req, res, next) => {
 }
 
 exports.postSignup = (req, res, next) => {
-    // const name = req.body.name;
-    // const email = req.body.email;
-    // const password = req.body.password;
-    // User.findOne({email:email}).then((user)=>{
-    //     if(user){
-    //         return res.redirect("/signup");
-    //     }
-    //     const user = new User({name:name,email:email,password:password});
-    //     user.save();
-    //     res.redirect("/login");
-    // }).catch((err)=>{
-    //     console.log(err);
-    // });
+    const email = req.body.email;
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+    if(password !== confirmPassword){
+        return res.redirect("/signup");
+    }
+    User.findOne({email:email}).then((existingUser)=>{
+        if(existingUser){
+            return res.redirect("/signup");
+        }
+        const user = new User({email:email,password:password, cart:{items:[]}});
+        return user.save();
+    }).then((result)=>{
+        res.redirect("/login");
+    }).catch((err)=>{
+        console.log(err);
+    });
 }
 
 exports.postLogout = (req, res, next) => {
