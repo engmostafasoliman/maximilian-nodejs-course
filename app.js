@@ -46,10 +46,11 @@ app.use(authRoutes);
 app.use("/admin",adminRoutes);
 app.use(shopRoutes);
 app.use(errorController.get404);
+//{name:"mostafa",email:"Devmostafasoliman@gmail.com",password:"123456",cart:{items:[]}}
 mongoose.connect(MONGODB_URI).then((result)=>{    
    User.findOne().then((user)=>{
     if(!user){
-        const user = new User({name:"mostafa",email:"Devmostafasoliman@gmail.com",cart:{items:[]}}).save();
+        const user = new User().save();
     }
    })
     app.listen(3001); 
