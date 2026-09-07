@@ -46,14 +46,8 @@ app.use(authRoutes);
 app.use("/admin",adminRoutes);
 app.use(shopRoutes);
 app.use(errorController.get404);
-//{name:"mostafa",email:"Devmostafasoliman@gmail.com",password:"123456",cart:{items:[]}}
-mongoose.connect(MONGODB_URI).then((result)=>{    
-   User.findOne().then((user)=>{
-    if(!user){
-        const user = new User().save();
-    }
-   })
-    app.listen(3001); 
+mongoose.connect(MONGODB_URI).then((result)=>{
+    app.listen(3001);
 }).catch((err)=>{
     console.log(err);
 });
