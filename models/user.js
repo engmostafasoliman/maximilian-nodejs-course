@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 const Order = require("./order");
 const Schema= mongoose.Schema;
 const userSchema = new Schema({
-    // name:{
-    //     type:String
-    // },
+    name:{
+        type:String
+    },
     email:{
         type:String,
         required:true
