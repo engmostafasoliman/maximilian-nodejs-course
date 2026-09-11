@@ -58,7 +58,11 @@ exports.postSignup = (req, res, next) => {
             return user.save();
         }).then((result)=>{
             res.redirect("/login");
-            return sendSignupEmail(email);
+            return sendSignupEmail(email).catch((err)=>{
+                // Don't fail signup if the welcome email can't be delivered
+                // (e.g. MailerSend sandbox recipient limit).
+                console.log("Signup email not sent:", err.message);
+            });
         });
     }).catch((err)=>{
         console.log(err);
