@@ -1,6 +1,7 @@
+const crypto = require("crypto");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-const { sendSignupEmail } = require("../util/email");
+const { sendSignupEmail, sendResetEmail } = require("../util/email");
 
 exports.getLogin = (req, res, next) => {
     res.render("auth/login", { pageTitle: "Login", path: "/login",isAuthenticated:req.session.isLoggedIn, errorMessage: req.flash("error") });
@@ -61,6 +62,83 @@ exports.postSignup = (req, res, next) => {
             return sendSignupEmail(email);
         });
     }).catch((err)=>{
+        console.log(err);
+    });
+}
+
+exports.getReset = (req, res, next) => {
+    res.render("auth/reset", { pageTitle: "Reset Password", path: "/reset", errorMessage: req.flash("error") });
+}
+
+exports.postReset = (req, res, next) => {
+    const email = req.body.email;
+    crypto.randomBytes(32, (err, buffer) => {
+        if (err) {
+            console.log(err);
+            return res.redirect("/reset");
+        }
+        const token = buffer.toString("hex");
+        User.findOne({ email: email }).then((user) => {
+            if (!user) {
+                req.flash("error", "No account with that email found.");
+                return res.redirect("/reset");
+            }
+            user.resetToken = token;
+            user.resetTokenExpiration = Date.now() + 3600000;
+            return user.save().then(() => {
+                res.redirect("/");
+                const resetLink = `http://localhost:3001/reset/${token}`;
+                return sendResetEmail(email, resetLink);
+            });
+        }).catch((err) => {
+            console.log(err);
+        });
+    });
+}
+
+exports.getNewPassword = (req, res, next) => {
+    const token = req.params.token;
+    User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } }).then((user) => {
+        if (!user) {
+            req.flash("error", "Password reset link is invalid or has expired.");
+            return res.redirect("/reset");
+        }
+        res.render("auth/new-password", {
+            pageTitle: "New Password",
+            path: "/new-password",
+            errorMessage: req.flash("error"),
+            userId: user._id.toString(),
+            passwordToken: token,
+        });
+    }).catch((err) => {
+        console.log(err);
+    });
+}
+
+exports.postNewPassword = (req, res, next) => {
+    const newPassword = req.body.password;
+    const userId = req.body.userId;
+    const passwordToken = req.body.passwordToken;
+    let resetUser;
+    User.findOne({
+        resetToken: passwordToken,
+        resetTokenExpiration: { $gt: Date.now() },
+        _id: userId,
+    }).then((user) => {
+        if (!user) {
+            req.flash("error", "Password reset link is invalid or has expired.");
+            return res.redirect("/reset");
+        }
+        resetUser = user;
+        return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
+            resetUser.password = hashedPassword;
+            resetUser.resetToken = undefined;
+            resetUser.resetTokenExpiration = undefined;
+            return resetUser.save();
+        }).then(() => {
+            res.redirect("/login");
+        });
+    }).catch((err) => {
         console.log(err);
     });
 }

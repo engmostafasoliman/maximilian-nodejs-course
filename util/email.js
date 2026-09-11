@@ -31,3 +31,15 @@ exports.sendSignupEmail = (to) => {
         html: "<h1>You successfully signed up!</h1>",
     });
 };
+
+exports.sendResetEmail = (to, resetLink) => {
+    return sendEmail({
+        to: to,
+        subject: "Password reset",
+        html: `
+            <p>You requested a password reset.</p>
+            <p>Click this <a href="${resetLink}">link</a> to set a new password.</p>
+            <p>This link is valid for 1 hour.</p>
+        `,
+    });
+};
