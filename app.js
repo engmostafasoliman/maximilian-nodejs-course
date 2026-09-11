@@ -11,6 +11,7 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const cookieParser = require("cookie-parser");
 const { doubleCsrf } = require("csrf-csrf");
+const flash = require("connect-flash");
 // const Product = require("./models/products");
 const User = require("./models/user");
 const MONGODB_URI = 'mongodb+srv://devmostafasoliman_db_user:TvL2qEKQsoLuTR1a@cluster0.hqnkpd7.mongodb.net/shop?appName=Cluster0';
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname,"public")));
 app.use(cookieParser("mysecretkey"));
 app.use(session({secret:"mysecretkey",resave:false,saveUninitialized:true,store:store}));
 app.use(doubleCsrfProtection);
+app.use(flash());
 
 app.set("view engine","ejs");
 app.set("views","views");
