@@ -22,6 +22,8 @@
     "bcryptjs": "^3.0.3",
     "body-parser": "^2.3.0",
     "connect-mongodb-session": "^5.0.0",
+    "cookie-parser": "^1.4.7",
+    "csrf-csrf": "^4.0.3",
     "ejs": "^6.0.1",
     "express": "^5.2.1",
     "express-handlebars": "^8.0.3",
