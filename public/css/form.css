@@ -1,3 +1,18 @@
+ .user-message {
+    margin: auto;
+    width: 90%;
+    border: 1px solid #929b16;
+    padding: 0.5rem;
+    border-radius: 3px;
+    text-align: center;
+ }
+
+ .user-message--error {
+    border-color: red;
+    background: #f8d7da;
+    color: #721c24;
+ }
+
  .form-control {
     margin: 1rem 0;
  }
