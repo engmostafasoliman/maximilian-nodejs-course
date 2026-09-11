@@ -1,10 +1,11 @@
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "email-credentials.env") });
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
-const path = require("path");
 const errorController = require("./controllers/errors");
 const mongoose = require("mongoose");
 const session = require("express-session");
